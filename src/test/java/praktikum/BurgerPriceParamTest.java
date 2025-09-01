@@ -5,6 +5,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -16,7 +17,7 @@ public class BurgerPriceParamTest {
     @Parameterized.Parameters(name = "bun={0}, ingredients={1} => expected={2}")
     public static Object[][] data() {
         return new Object[][]{
-                {0f, Arrays.asList(), 0f},
+                {0f, Collections.<Float>emptyList(), 0f},
                 {100f, Arrays.asList(0f), 200f},
                 {123.45f, Arrays.asList(1f, 2.5f, 3f), 123.45f * 2 + 1f + 2.5f + 3f}
         };
@@ -33,7 +34,7 @@ public class BurgerPriceParamTest {
     }
 
     @Test
-    public void price_isCalculatedCorrectly_forVariousInputs() {
+    public void priceIsCalculatedCorrectlyForVariousInputs() {
         // arrange
         Burger burger = new Burger();
 

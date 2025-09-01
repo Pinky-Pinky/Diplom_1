@@ -15,8 +15,10 @@ public class BurgerTest {
         burger = new Burger();
     }
 
+    // --- setBuns ---
+
     @Test
-    public void setBuns_setsBunOnBurger() {
+    public void setBunsSetsBunOnBurger() {
         Bun bun = mock(Bun.class);
         when(bun.getName()).thenReturn("Флюоресцентная булка");
         when(bun.getPrice()).thenReturn(50.0f);
@@ -27,64 +29,164 @@ public class BurgerTest {
         assertTrue(receipt.startsWith("(==== Флюоресцентная булка ====)"));
     }
 
-    @Test
-    public void addIngredient_appendsToIngredientsList() {
-        Ingredient ing1 = mock(Ingredient.class);
-        Ingredient ing2 = mock(Ingredient.class);
+    // --- addIngredient ---
 
-        burger.addIngredient(ing1);
-        burger.addIngredient(ing2);
+    @Test
+    public void addIngredientIncreasesSizeToTwo() {
+        Ingredient firstIngredient = mock(Ingredient.class);
+        Ingredient secondIngredient = mock(Ingredient.class);
+
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
 
         assertEquals(2, burger.ingredients.size());
-        assertSame(ing1, burger.ingredients.get(0));
-        assertSame(ing2, burger.ingredients.get(1));
     }
 
     @Test
-    public void removeIngredient_removesByIndex() {
-        Ingredient ing1 = mock(Ingredient.class);
-        Ingredient ing2 = mock(Ingredient.class);
-        Ingredient ing3 = mock(Ingredient.class);
-        burger.addIngredient(ing1);
-        burger.addIngredient(ing2);
-        burger.addIngredient(ing3);
+    public void addIngredientKeepsOrderFirstAtIndex0() {
+        Ingredient firstIngredient = mock(Ingredient.class);
+        Ingredient secondIngredient = mock(Ingredient.class);
+
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
+
+        assertSame(firstIngredient, burger.ingredients.get(0));
+    }
+
+    @Test
+    public void addIngredientKeepsOrderSecondAtIndex1() {
+        Ingredient firstIngredient = mock(Ingredient.class);
+        Ingredient secondIngredient = mock(Ingredient.class);
+
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
+
+        assertSame(secondIngredient, burger.ingredients.get(1));
+    }
+
+    // --- removeIngredient ---
+
+    @Test
+    public void removeIngredientReducesSizeToTwo() {
+        Ingredient firstIngredient = mock(Ingredient.class);
+        Ingredient secondIngredient = mock(Ingredient.class);
+        Ingredient thirdIngredient = mock(Ingredient.class);
+
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
+        burger.addIngredient(thirdIngredient);
 
         burger.removeIngredient(1);
 
         assertEquals(2, burger.ingredients.size());
-        assertSame(ing1, burger.ingredients.get(0));
-        assertSame(ing3, burger.ingredients.get(1));
-        assertFalse(burger.ingredients.contains(ing2));
     }
 
     @Test
-    public void moveIngredient_movesElementToNewIndex() {
-        Ingredient a = mock(Ingredient.class);
-        Ingredient b = mock(Ingredient.class);
-        Ingredient c = mock(Ingredient.class);
-        burger.addIngredient(a);
-        burger.addIngredient(b);
-        burger.addIngredient(c);
+    public void removeIngredientKeepsFirstElement() {
+        Ingredient firstIngredient = mock(Ingredient.class);
+        Ingredient secondIngredient = mock(Ingredient.class);
+        Ingredient thirdIngredient = mock(Ingredient.class);
+
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
+        burger.addIngredient(thirdIngredient);
+
+        burger.removeIngredient(1);
+
+        assertSame(firstIngredient, burger.ingredients.get(0));
+    }
+
+    @Test
+    public void removeIngredientMovesThirdToSecondPosition() {
+        Ingredient firstIngredient = mock(Ingredient.class);
+        Ingredient secondIngredient = mock(Ingredient.class);
+        Ingredient thirdIngredient = mock(Ingredient.class);
+
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
+        burger.addIngredient(thirdIngredient);
+
+        burger.removeIngredient(1);
+
+        assertSame(thirdIngredient, burger.ingredients.get(1));
+    }
+
+    @Test
+    public void removeIngredientRemovesSecondElement() {
+        Ingredient firstIngredient = mock(Ingredient.class);
+        Ingredient secondIngredient = mock(Ingredient.class);
+        Ingredient thirdIngredient = mock(Ingredient.class);
+
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
+        burger.addIngredient(thirdIngredient);
+
+        burger.removeIngredient(1);
+
+        assertFalse(burger.ingredients.contains(secondIngredient));
+    }
+
+    // --- moveIngredient ---
+
+    @Test
+    public void moveIngredientUpdatesIndex0ToSecondIngredient() {
+        Ingredient firstIngredient = mock(Ingredient.class);
+        Ingredient secondIngredient = mock(Ingredient.class);
+        Ingredient thirdIngredient = mock(Ingredient.class);
+
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
+        burger.addIngredient(thirdIngredient);
 
         burger.moveIngredient(0, 2);
 
-        assertSame(b, burger.ingredients.get(0));
-        assertSame(c, burger.ingredients.get(1));
-        assertSame(a, burger.ingredients.get(2));
+        assertSame(secondIngredient, burger.ingredients.get(0));
     }
 
     @Test
-    public void getPrice_returnsSumOfBunsTwicePlusIngredients() {
+    public void moveIngredientUpdatesIndex1ToThirdIngredient() {
+        Ingredient firstIngredient = mock(Ingredient.class);
+        Ingredient secondIngredient = mock(Ingredient.class);
+        Ingredient thirdIngredient = mock(Ingredient.class);
+
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
+        burger.addIngredient(thirdIngredient);
+
+        burger.moveIngredient(0, 2);
+
+        assertSame(thirdIngredient, burger.ingredients.get(1));
+    }
+
+    @Test
+    public void moveIngredientUpdatesIndex2ToFirstIngredient() {
+        Ingredient firstIngredient = mock(Ingredient.class);
+        Ingredient secondIngredient = mock(Ingredient.class);
+        Ingredient thirdIngredient = mock(Ingredient.class);
+
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
+        burger.addIngredient(thirdIngredient);
+
+        burger.moveIngredient(0, 2);
+
+        assertSame(firstIngredient, burger.ingredients.get(2));
+    }
+
+    // --- getPrice ---
+
+    @Test
+    public void getPriceReturnsSumOfBunsTwicePlusIngredients() {
         Bun bun = mock(Bun.class);
         when(bun.getPrice()).thenReturn(100.0f);
         burger.setBuns(bun);
 
-        Ingredient ing1 = mock(Ingredient.class);
-        Ingredient ing2 = mock(Ingredient.class);
-        when(ing1.getPrice()).thenReturn(15.5f);
-        when(ing2.getPrice()).thenReturn(24.5f);
-        burger.addIngredient(ing1);
-        burger.addIngredient(ing2);
+        Ingredient firstIngredient = mock(Ingredient.class);
+        Ingredient secondIngredient = mock(Ingredient.class);
+        when(firstIngredient.getPrice()).thenReturn(15.5f);
+        when(secondIngredient.getPrice()).thenReturn(24.5f);
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
 
         float actual = burger.getPrice();
         float expected = 100.0f * 2 + 15.5f + 24.5f;
@@ -92,8 +194,10 @@ public class BurgerTest {
         assertEquals(expected, actual, 0.0001f);
     }
 
+    // --- getReceipt ---
+
     @Test
-    public void getReceipt_returnsFormattedReceipt() {
+    public void getReceiptContainsTopBunLine() {
         Bun bun = mock(Bun.class);
         when(bun.getName()).thenReturn("Люминесцентная булка");
         when(bun.getPrice()).thenReturn(50.0f);
@@ -115,8 +219,80 @@ public class BurgerTest {
         String receipt = burger.getReceipt();
 
         assertTrue(receipt.contains("(==== Люминесцентная булка ====)"));
+    }
+
+    @Test
+    public void getReceiptContainsSauceLine() {
+        Bun bun = mock(Bun.class);
+        when(bun.getName()).thenReturn("Люминесцентная булка");
+        when(bun.getPrice()).thenReturn(50.0f);
+        burger.setBuns(bun);
+
+        Ingredient sauce = mock(Ingredient.class);
+        when(sauce.getType()).thenReturn(IngredientType.SAUCE);
+        when(sauce.getName()).thenReturn("Space Sauce");
+        when(sauce.getPrice()).thenReturn(10.0f);
+
+        Ingredient filling = mock(Ingredient.class);
+        when(filling.getType()).thenReturn(IngredientType.FILLING);
+        when(filling.getName()).thenReturn("Метеоритное мясо");
+        when(filling.getPrice()).thenReturn(25.0f);
+
+        burger.addIngredient(sauce);
+        burger.addIngredient(filling);
+
+        String receipt = burger.getReceipt();
+
         assertTrue(receipt.contains("= sauce Space Sauce ="));
+    }
+
+    @Test
+    public void getReceiptContainsFillingLine() {
+        Bun bun = mock(Bun.class);
+        when(bun.getName()).thenReturn("Люминесцентная булка");
+        when(bun.getPrice()).thenReturn(50.0f);
+        burger.setBuns(bun);
+
+        Ingredient sauce = mock(Ingredient.class);
+        when(sauce.getType()).thenReturn(IngredientType.SAUCE);
+        when(sauce.getName()).thenReturn("Space Sauce");
+        when(sauce.getPrice()).thenReturn(10.0f);
+
+        Ingredient filling = mock(Ingredient.class);
+        when(filling.getType()).thenReturn(IngredientType.FILLING);
+        when(filling.getName()).thenReturn("Метеоритное мясо");
+        when(filling.getPrice()).thenReturn(25.0f);
+
+        burger.addIngredient(sauce);
+        burger.addIngredient(filling);
+
+        String receipt = burger.getReceipt();
+
         assertTrue(receipt.contains("= filling Метеоритное мясо ="));
+    }
+
+    @Test
+    public void getReceiptContainsPriceLine() {
+        Bun bun = mock(Bun.class);
+        when(bun.getName()).thenReturn("Люминесцентная булка");
+        when(bun.getPrice()).thenReturn(50.0f);
+        burger.setBuns(bun);
+
+        Ingredient sauce = mock(Ingredient.class);
+        when(sauce.getType()).thenReturn(IngredientType.SAUCE);
+        when(sauce.getName()).thenReturn("Space Sauce");
+        when(sauce.getPrice()).thenReturn(10.0f);
+
+        Ingredient filling = mock(Ingredient.class);
+        when(filling.getType()).thenReturn(IngredientType.FILLING);
+        when(filling.getName()).thenReturn("Метеоритное мясо");
+        when(filling.getPrice()).thenReturn(25.0f);
+
+        burger.addIngredient(sauce);
+        burger.addIngredient(filling);
+
+        String receipt = burger.getReceipt();
+
         assertTrue(receipt.contains("Price: "));
     }
 }
