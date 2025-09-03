@@ -197,7 +197,7 @@ public class BurgerTest {
     // --- getReceipt ---
 
     @Test
-    public void getReceiptContainsTopBunLine() {
+    public void getReceiptReturnsFullFormattedReceipt() {
         Bun bun = mock(Bun.class);
         when(bun.getName()).thenReturn("Люминесцентная булка");
         when(bun.getPrice()).thenReturn(50.0f);
@@ -216,83 +216,19 @@ public class BurgerTest {
         burger.addIngredient(sauce);
         burger.addIngredient(filling);
 
-        String receipt = burger.getReceipt();
+        String expected = String.format(
+                "(==== %s ====)%n" +
+                        "= sauce %s =%n" +
+                        "= filling %s =%n" +
+                        "(==== %s ====)%n%n" +
+                        "Price: %f%n",
+                "Люминесцентная булка",
+                "Space Sauce",
+                "Метеоритное мясо",
+                "Люминесцентная булка",
+                50.0f * 2 + 10.0f + 25.0f
+        );
 
-        assertTrue(receipt.contains("(==== Люминесцентная булка ====)"));
-    }
-
-    @Test
-    public void getReceiptContainsSauceLine() {
-        Bun bun = mock(Bun.class);
-        when(bun.getName()).thenReturn("Люминесцентная булка");
-        when(bun.getPrice()).thenReturn(50.0f);
-        burger.setBuns(bun);
-
-        Ingredient sauce = mock(Ingredient.class);
-        when(sauce.getType()).thenReturn(IngredientType.SAUCE);
-        when(sauce.getName()).thenReturn("Space Sauce");
-        when(sauce.getPrice()).thenReturn(10.0f);
-
-        Ingredient filling = mock(Ingredient.class);
-        when(filling.getType()).thenReturn(IngredientType.FILLING);
-        when(filling.getName()).thenReturn("Метеоритное мясо");
-        when(filling.getPrice()).thenReturn(25.0f);
-
-        burger.addIngredient(sauce);
-        burger.addIngredient(filling);
-
-        String receipt = burger.getReceipt();
-
-        assertTrue(receipt.contains("= sauce Space Sauce ="));
-    }
-
-    @Test
-    public void getReceiptContainsFillingLine() {
-        Bun bun = mock(Bun.class);
-        when(bun.getName()).thenReturn("Люминесцентная булка");
-        when(bun.getPrice()).thenReturn(50.0f);
-        burger.setBuns(bun);
-
-        Ingredient sauce = mock(Ingredient.class);
-        when(sauce.getType()).thenReturn(IngredientType.SAUCE);
-        when(sauce.getName()).thenReturn("Space Sauce");
-        when(sauce.getPrice()).thenReturn(10.0f);
-
-        Ingredient filling = mock(Ingredient.class);
-        when(filling.getType()).thenReturn(IngredientType.FILLING);
-        when(filling.getName()).thenReturn("Метеоритное мясо");
-        when(filling.getPrice()).thenReturn(25.0f);
-
-        burger.addIngredient(sauce);
-        burger.addIngredient(filling);
-
-        String receipt = burger.getReceipt();
-
-        assertTrue(receipt.contains("= filling Метеоритное мясо ="));
-    }
-
-    @Test
-    public void getReceiptContainsPriceLine() {
-        Bun bun = mock(Bun.class);
-        when(bun.getName()).thenReturn("Люминесцентная булка");
-        when(bun.getPrice()).thenReturn(50.0f);
-        burger.setBuns(bun);
-
-        Ingredient sauce = mock(Ingredient.class);
-        when(sauce.getType()).thenReturn(IngredientType.SAUCE);
-        when(sauce.getName()).thenReturn("Space Sauce");
-        when(sauce.getPrice()).thenReturn(10.0f);
-
-        Ingredient filling = mock(Ingredient.class);
-        when(filling.getType()).thenReturn(IngredientType.FILLING);
-        when(filling.getName()).thenReturn("Метеоритное мясо");
-        when(filling.getPrice()).thenReturn(25.0f);
-
-        burger.addIngredient(sauce);
-        burger.addIngredient(filling);
-
-        String receipt = burger.getReceipt();
-
-        assertTrue(receipt.contains("Price: "));
+        assertEquals(expected, burger.getReceipt());
     }
 }
